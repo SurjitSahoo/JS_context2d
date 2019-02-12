@@ -1,14 +1,18 @@
 var particle = {
-    mass: 1,
     position: null,
     velocity: null,
+    mass: 1,
+    radious: 0,
+    bounce: -1,
+    friction: 1,
 
-    create: function(x, y, speed, direction){
+    create: function(x, y, speed, direction, grav){
         var obj = Object.create(this);
         obj.position = vector.create(x, y);
         obj.velocity = vector.create(0, 0);
         obj.velocity.setLength(speed);
         obj.velocity.setAngle(direction);
+        obj.gravity = vector.create(0, grav || 0);
         return obj;
     },
 
@@ -18,6 +22,8 @@ var particle = {
 
     update: function(){
         this.position.addTo(this.velocity);
+        this.velocity.addTo(this.gravity);
+        this.velocity.multiplyBy(this.friction);
     },
     angleTo: function(p2){
         return Math.atan2(p2.position.getY() - this.position.getY(), p2.position.getX() - this.position.getX());
